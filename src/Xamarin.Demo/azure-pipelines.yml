@@ -1,20 +1,28 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 pool:
   vmImage: windows-2019
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'x86'#|x64|ARM'
-  buildConfiguration: 'Release'
-  uwpPackages: '$(build.artifactStagingDirectory)\uwp'
-  androidPackages: '$(build.artifactStagingDirectory)\android'
-  testPackages: '$(build.artifactStagingDirectory)\test'
-  apksignerKeystorePassword: '12341234'
-  uwpsignerKeyPassword : '1234'
+- group: App-Center
+- name:  solution
+  value: '**/*.sln'
+- name: buildPlatform
+  value: 'x86'
+- name: buildConfiguration
+  value: 'Release'
+- name: uwpPackages
+  value: '$(build.artifactStagingDirectory)\uwp'
+- name: androidPackages
+  value: '$(build.artifactStagingDirectory)\android'
+- name: testPackages
+  value: '$(build.artifactStagingDirectory)\test'
+- name: apksignerKeystorePassword
+  value: '12341234'
+- name: uwpsignerKeyPassword 
+  value: '1234'
+- name: appcenter-app-slug
+  value: 'daronyondem-MS/xamarin-demo' 
+- name: appcenter-device-set-slug
+  value: 'daronyondem-MS/test-devices' 
 
 stages:
 - stage: Build
@@ -64,7 +72,7 @@ stages:
       displayName: 'build uwp'
       inputs:
         platform: 'x86'
-        solution: '$(solution)'
+        solution: '**/*UWP*.csproj'
         configuration: '$(buildConfiguration)'
         msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" 
                       /p:AppxPackageDir="$(uwpPackages)" 
@@ -73,7 +81,7 @@ stages:
                       /p:AppxPackageSigningEnabled=true
                       /p:PackageCertificateThumbprint="4D3D3883BA7C0830B284B51842AFEA6EAF3CF79A" 
                       /p:PackageCertificateKeyFile="$(signingCert.secureFilePath)"
-                      /p:PackageCertificatePassword="1234"'
+                      /p:PackageCertificatePassword="$(uwpsignerKeyPassword)"'
     - task: PublishBuildArtifacts@1
       displayName: "publish build outputs"
       inputs:
@@ -130,7 +138,7 @@ stages:
         displayName: Run tests on appcenter
         inputs:
           targetType: 'inline'
-          script: "appcenter test run uitest --app daronyondem-MS/xamarin-demo --async --devices daronyondem-MS/test-devices --app-path '$(build.artifactStagingDirectory)\\drop\\android\\com.companyname.xamarin.demo.app.apk' --build-dir '$(build.artifactStagingDirectory)\\drop\\test' --uitest-tools-dir '$(build.artifactStagingDirectory)\\drop\\test' --token da2125d78edb6e61361b8af6aba2b54fb0427682"
+          script: "appcenter test run uitest --app '$(appcenter-app-slug)' --async --devices '$(appcenter-device-set-slug)' --app-path '$(build.artifactStagingDirectory)\\drop\\android\\com.companyname.xamarin.demo.app.apk' --build-dir '$(build.artifactStagingDirectory)\\drop\\test' --uitest-tools-dir '$(build.artifactStagingDirectory)\\drop\\test' --token '$(API_TOKEN)'"
 
 - stage: Distribute_Android
   displayName: Distribute Android App to AppCenter
@@ -151,7 +159,7 @@ stages:
       - task: AppCenterDistribute@3
         inputs:
           serverEndpoint: 'App Center'
-          appSlug: 'daronyondem-MS/xamarin-demo'
+          appSlug: '$(appcenter-app-slug)'
           appFile: '$(build.artifactStagingDirectory)\drop\android\com.companyname.xamarin.demo.app.apk'
           releaseNotesOption: 'input'
           releaseNotesInput: 'Initial release note'
