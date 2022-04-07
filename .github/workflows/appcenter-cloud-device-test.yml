@@ -87,7 +87,7 @@ jobs:
       run: npm install -g appcenter-cli
       shell: bash
     - name: Run tests on appcenter
-      run: appcenter test run uitest --app '${{ env.appcenter-android-app-slug }}' --async --devices '${{ env.appcenter-android-device-set-slug }}' --app-path '${{ env.androidPackages }}\com.companyname.xamarin.demo.app.apk' --build-dir '${{ env.testPackages }}' --uitest-tools-dir '${{ env.testPackages }}' --token '${{ secrets.APP_CENTER_API_TOKEN }}'
+      run: appcenter test run uitest --app '${{ env.appcenter-android-app-slug }}' --devices '${{ env.appcenter-android-device-set-slug }}' --app-path '${{ env.androidPackages }}\com.companyname.xamarin.demo.app.apk' --build-dir '${{ env.testPackages }}' --uitest-tools-dir '${{ env.testPackages }}' --token '${{ secrets.APP_CENTER_API_TOKEN }}'
       shell: bash
   Distribute_Android_Stage_Distribute_Android_AppCenter:
     runs-on: ubuntu-latest
