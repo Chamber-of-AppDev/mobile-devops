@@ -4,21 +4,24 @@ on:
 env:
   solution: 'src\Xamarin.Demo\Xamarin.Demo.sln'
   buildPlatform: x86
-  buildConfiguration: Release
+  buildConfiguration: Release 
   
   uwpPackages: ${{ github.workspace }}\uwp
   androidPackages: ${{ github.workspace }}\android
   testPackages: ${{ github.workspace }}\test
   
-  uwp_signer_certificate_path : ${{ github.workspace }}\src\Xamarin.Demo\self-signed-certs\Xamarin.Demo.App.UWP_TemporaryKey.pfx
-  uwpSignerKeyPassword: 1234
+  androidProjectPath: ${{ github.workspace }}\src\Xamarin.Demo\Xamarin.Demo.App\Xamarin.Demo.App.Android\Xamarin.Demo.App.Android.csproj
+  androidKeystorePath : ${{ github.workspace }}\android-keystore.keystore.b64
   
-  android_keystore_path : ${{ github.workspace }}\src\Xamarin.Demo\self-signed-certs\android-keystore.keystore
-  androidSigningKeyStorePassword: 12341234
-  androidSigningAlias: 'android-keystore'
+  uwpProjectPath: src\Xamarin.Demo\Xamarin.Demo.App\Xamarin.Demo.App.UWP\Xamarin.Demo.App.UWP.csproj
+  uwpCertificatePath : ${{ github.workspace }}\Xamarin.Demo.App.UWP_TemporaryKey.pfx.b64
+  
+  testProjectPath: 'src\Xamarin.Demo\Xamarin.Demo.App.UITest\Xamarin.Demo.App.UITest.csproj'
     
-  appcenter-android-app-slug: daronyondem-MS/xamarin-demo
-  appcenter-android-device-set-slug: daronyondem-MS/test-devices
+  appcenterAndroidAppSlug: daronyondem-MS/xamarin-demo
+  appcenterAndroidDeviceSetSlug: daronyondem-MS/test-devices
+  appcenterUwpAppSlug: daronyondem-MS/uwp-demo/
+
 jobs:
   Build_Stage_Build_Android:
     runs-on: windows-2019
@@ -28,15 +31,21 @@ jobs:
     - run: nuget restore ${{ env.solution }}
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
+    - name: Get secret from base64     
+      env:
+        base64Content: ${{ secrets.ANDROID_SIGNING_KEY_BASE64 }}
+        filePath: ${{ env.androidKeystorePath }}
+      run: |
+        echo $Env:base64Content > data.b64 
+        certutil -decode data.b64 $Env:filePath
     - name: build android
       run: |
-        msbuild '${{ github.workspace }}\src\Xamarin.Demo\Xamarin.Demo.App\Xamarin.Demo.App.Android\Xamarin.Demo.App.Android.csproj' /verbosity:normal /t:Rebuild /p:Configuration=${{ env.buildConfiguration }} /p:OutputPath=${{ env.androidPackages }} /t:SignAndroidPackage /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=${{ env.androidSigningAlias }} /p:AndroidSigningKeyPass=${{ env.androidSigningKeyStorePassword }} /p:AndroidSigningKeyStore=${{ env.android_keystore_path }} /p:AndroidSigningStorePass=${{ env.androidSigningKeyStorePassword }}    
+        msbuild '${{ env.androidProjectPath }}' /verbosity:normal /t:Rebuild /p:Configuration=${{ env.buildConfiguration }} /p:OutputPath=${{ env.androidPackages }} /t:SignAndroidPackage /p:AndroidKeyStore=true /p:AndroidSigningKeyAlias=${{ secrets.ANDROID_SIGNING_KEY_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.ANDROID_SIGNING_KEY_STORE_PASSWORD }} /p:AndroidSigningKeyStore=${{ env.androidKeystorePath }} /p:AndroidSigningStorePass=${{ secrets.ANDROID_SIGNING_KEY_STORE_PASSWORD }}    
     - name: publish build outputs
       uses: actions/upload-artifact@v2
       with:
         path: ${{ env.androidPackages }}
         name: android
-
   Build_Stage_Build_UWP:
     runs-on: windows-2019
     steps:
@@ -46,8 +55,15 @@ jobs:
     - run: nuget restore ${{ env.solution }}
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
+    - name: Get secret from base64
+      env:
+        base64Content: ${{ secrets.UWP_CERTIFICATE_BASE64 }}
+        filePath: ${{ env.uwpCertificatePath}}
+      run: |
+        echo $Env:base64Content > data.b64 
+        certutil -decode data.b64 $Env:filePath
     - name: build uwp
-      run: msbuild 'src\Xamarin.Demo\Xamarin.Demo.App\Xamarin.Demo.App.UWP\Xamarin.Demo.App.UWP.csproj' /p:configuration='${{ env.buildConfiguration }}' /p:platform='x86' /p:AppxBundlePlatforms="${{ env.buildPlatform }}" /p:AppxPackageDir="${{ env.uwpPackages }}" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="4D3D3883BA7C0830B284B51842AFEA6EAF3CF79A" /p:PackageCertificateKeyFile="${{ env.uwp_signer_certificate_path}}" /p:PackageCertificatePassword="${{ env.uwpSignerKeyPassword }}"
+      run: msbuild '${{ env.uwpProjectPath }}' /p:configuration='${{ env.buildConfiguration }}' /p:platform='x86' /p:AppxBundlePlatforms="${{ env.buildPlatform }}" /p:AppxPackageDir="${{ env.uwpPackages }}" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload /p:AppxPackageSigningEnabled=true /p:PackageCertificateThumbprint="4D3D3883BA7C0830B284B51842AFEA6EAF3CF79A" /p:PackageCertificateKeyFile="${{ env.uwpCertificatePath}}" /p:PackageCertificatePassword="${{ secrets.UWP_CERTIFICATE_PASSWORD }}"
     - name: publish build outputs
       uses: actions/upload-artifact@v2
       with:
@@ -62,7 +78,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
     - name: build ui tests
-      run: msbuild 'src\Xamarin.Demo\Xamarin.Demo.App.UITest\Xamarin.Demo.App.UITest.csproj' /p:configuration='${{ env.buildConfiguration }}' /p:OutputPath="${{ env.testPackages }}"
+      run: msbuild '${{ env.testProjectPath }}' /p:configuration='${{ env.buildConfiguration }}' /p:OutputPath="${{ env.testPackages }}"
     - name: publish build outputs
       uses: actions/upload-artifact@v2
       with:
@@ -87,7 +103,7 @@ jobs:
       run: npm install -g appcenter-cli
       shell: bash
     - name: Run tests on appcenter
-      run: appcenter test run uitest --app '${{ env.appcenter-android-app-slug }}' --devices '${{ env.appcenter-android-device-set-slug }}' --app-path '${{ env.androidPackages }}\com.companyname.xamarin.demo.app.apk' --build-dir '${{ env.testPackages }}' --uitest-tools-dir '${{ env.testPackages }}' --token '${{ secrets.APP_CENTER_API_TOKEN }}'
+      run: appcenter test run uitest --app '${{ env.appcenterAndroidAppSlug }}' --devices '${{ env.appcenterAndroidDeviceSetSlug }}' --app-path '${{ env.androidPackages }}\com.companyname.xamarin.demo.app.apk' --build-dir '${{ env.testPackages }}' --uitest-tools-dir '${{ env.testPackages }}' --token '${{ secrets.APP_CENTER_API_TOKEN }}'
       shell: bash
   Distribute_Android_Stage_Distribute_Android_AppCenter:
     runs-on: ubuntu-latest
@@ -101,7 +117,7 @@ jobs:
     - name: upload artifact to App Center
       uses: wzieba/AppCenter-Github-Action@v1
       with:
-        appName: ${{ env.appcenter-android-app-slug }}
+        appName: ${{ env.appcenterAndroidAppSlug }}
         token: ${{secrets.APP_CENTER_API_TOKEN}}
         file: ${{ env.androidPackages }}\com.companyname.xamarin.demo.app.apk
         notifyTesters: true
@@ -115,3 +131,11 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         path: ${{ github.workspace }}
+    - name: upload artifact to App Center
+      uses: wzieba/AppCenter-Github-Action@v1
+      with:
+        appName: ${{ env.appcenterUwpAppSlug }}
+        token: ${{secrets.APP_CENTER_API_TOKEN}}
+        file: ${{ env.uwpPackages }}\Xamarin.Demo.App.UWP_1.0.0.0_Test\Xamarin.Demo.App.UWP_1.0.0.0_x86.appxbundle
+        notifyTesters: true
+        debug: true
