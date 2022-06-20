@@ -9,7 +9,7 @@ Contents:
   - [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops#step-4-github-configuration)
   - [Step 5: Configure secrets](https://github.com/danelbernau/mobile-devops#step-5-configure-secrets)
   - [Step 6: Configure actions](https://github.com/danelbernau/mobile-devops#step-6-configure-actions)
-  - [Step 7: Build, Test & Deploy](https://github.com/danelbernau/mobile-devops#step-7-run-workflow)
+  - [Step 7: Build, Test & Deploy](https://github.com/danelbernau/mobile-devops#step-7-build-test--deploy)
   - [Troubleshooting](https://github.com/danelbernau/mobile-devops#troubleshooting)
 
 
@@ -60,7 +60,7 @@ In this step, you create a Visual Studio App Center account and add a new app.
  ![image](https://user-images.githubusercontent.com/107197611/174596479-c38d1e15-8989-4ba6-892c-b63c62f0d40d.png)
 
 
-## Step 7: Run workflow
+## Step 7: Build, test & deploy
 1. In the newly created fork from [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops#step-4-github-configuration), go to **Actions** and enable if prompted
 2. Select the **Build & Test on AppCenter** workflow
 3. Click on the **Run workflow** button ![image](https://user-images.githubusercontent.com/107197611/174613185-d8fa6ed0-16e2-4bea-9476-fbea17ceb71e.png)
