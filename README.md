@@ -2,15 +2,15 @@
 This guide provides step-by-step instructions to manually provision and configure the resources needed for the mobile-devops demo as well as instructions on how to run the demo.
 
 Contents:
-- [Manual resource setup guide](https://github.com/danelbernau/mobile-devops/edit/main/README.md#manual-resource-setup-guide)
-  - [Step 1: Create a Visual Studio App Center app](https://github.com/danelbernau/mobile-devops/new/main?readme=1#step-1-create-a-visual-studio-app-center-app)
-  - [Step 2: Set up your device sets](https://github.com/danelbernau/mobile-devops/new/main?readme=1#step-2-set-up-your-device-sets)
-  - [Step 3: Generate API token](https://github.com/danelbernau/mobile-devops/new/main?readme=1#step-3-generate-api-token)
-  - [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops/new/main?readme=1#step-4-github-configuration)
-  - [Step 5: Configure secrets](https://github.com/danelbernau/mobile-devops/edit/main/README.md#step-5-configure-secrets)
-  - [Step 6: Configure actions](https://github.com/danelbernau/mobile-devops/edit/main/README.md#step-6-configure-actions)
-  - [Step 7: Build, Test & Deploy](https://github.com/danelbernau/mobile-devops/edit/main/README.md#step-7-run-workflow)
-  - [Troubleshooting](https://github.com/danelbernau/mobile-devops/edit/main/README.md#troubleshooting)
+- [Manual resource setup guide](https://github.com/danelbernau/mobile-devops#manual-resource-setup-guide)
+  - [Step 1: Create a Visual Studio App Center app](https://github.com/danelbernau/mobile-devops#step-1-create-a-visual-studio-app-center-app)
+  - [Step 2: Set up your device sets](https://github.com/danelbernau/mobile-devops#step-2-set-up-your-device-sets)
+  - [Step 3: Generate API token](https://github.com/danelbernau/mobile-devops#step-3-generate-api-token)
+  - [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops#step-4-github-configuration)
+  - [Step 5: Configure secrets](https://github.com/danelbernau/mobile-devops#step-5-configure-secrets)
+  - [Step 6: Configure actions](https://github.com/danelbernau/mobile-devops#step-6-configure-actions)
+  - [Step 7: Build, Test & Deploy](https://github.com/danelbernau/mobile-devops#step-7-run-workflow)
+  - [Troubleshooting](https://github.com/danelbernau/mobile-devops#troubleshooting)
 
 
 ## Step 1: Create a Visual Studio App Center app
@@ -23,7 +23,7 @@ In this step, you create a Visual Studio App Center account and add a new app.
 4. Repeat 2 & 3 but with **Windows** as OS and **UWP** as the platform.
 
 ## Step 2: Set up your device sets
-1. Navigate to the Android app created in [Step 1: Create a Visual Studio App Center app](https://github.com/danelbernau/mobile-devops/new/main?readme=1#step-1-create-a-visual-studio-app-center-app). On the left-hand menu, select **Test** > **Device sets** > **New device set** ![image](https://user-images.githubusercontent.com/107197611/174609023-a6fd3f38-7b17-4791-8291-e13a874fdbe9.png)
+1. Navigate to the Android app created in [Step 1: Create a Visual Studio App Center app](https://github.com/danelbernau/mobile-devops#step-1-create-a-visual-studio-app-center-app). On the left-hand menu, select **Test** > **Device sets** > **New device set** ![image](https://user-images.githubusercontent.com/107197611/174609023-a6fd3f38-7b17-4791-8291-e13a874fdbe9.png)
 2. Fill in the device set name and select the devices you want to include in your device set. ![image](https://user-images.githubusercontent.com/107197611/174574721-7b9283f8-27a5-4795-a379-9acb626f01cf.png)
 
 > All devices in this device set will form part of the tests performed during the build, test & deploy workflow in GitHub actions. The more devices included in the device set the longer the testing phase will take.
@@ -32,7 +32,7 @@ In this step, you create a Visual Studio App Center account and add a new app.
 1. In the [Visual Studio App Center portal](https://appcenter.ms), click on your profile in the top right and select **Account Settings** ![image](https://user-images.githubusercontent.com/107197611/174582205-72b65b51-c82e-4f83-b4dc-9c167401a4d1.png)
 2. Click on the icon in the **User API tokens** menu item ![image](https://user-images.githubusercontent.com/107197611/174582698-603b4a84-f81c-4225-bccc-f150e1c857ef.png)
 3. Fill in the description and click on **Add new API token**. ![image](https://user-images.githubusercontent.com/107197611/174582984-815952eb-a4b8-4d50-88c5-effdcd2bdff2.png)
-4. Make a note of the API token, this will be needed in [Step 5: Configure secrets](https://github.com/danelbernau/mobile-devops/edit/main/README.md#step-5-configure-secrets).
+4. Make a note of the API token, this will be needed in [Step 5: Configure secrets](https://github.com/danelbernau/mobile-devops#step-5-configure-secrets).
 
 ## Step 4: GitHub configuration
 1. Create a new Fork from the [main GitHub project](https://github.com/Chamber-of-AppDev/mobile-devops) ![image](https://user-images.githubusercontent.com/107197611/174584314-a71840ec-0db0-41eb-b1cc-4169f5a3c809.png)
@@ -40,7 +40,7 @@ In this step, you create a Visual Studio App Center account and add a new app.
 > All GitHub configurations in steps 5 - 7 will be done on this fork.
 
 ## Step 5: Configure secrets
-1. In the newly created fork from [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops/edit/main/README.md#step-4-github-configuration), go to **Settings** > **Secrets** > **Actions** > **New repository secret** ![image](https://user-images.githubusercontent.com/107197611/174593367-75643080-2b5d-432f-b1e2-a84ddd8ade4c.png)
+1. In the newly created fork from [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops#step-4-github-configuration), go to **Settings** > **Secrets** > **Actions** > **New repository secret** ![image](https://user-images.githubusercontent.com/107197611/174593367-75643080-2b5d-432f-b1e2-a84ddd8ade4c.png)
 2. Fill in the secret name and value and click on **Add secret** ![image](https://user-images.githubusercontent.com/107197611/174593645-ea273814-3039-4a44-9664-a41edfe81484.png)
 3. Make sure all the secrets are added 
    - `ANDROID_SIGNING_KEY_ALIAS` android_keystore
@@ -52,7 +52,7 @@ In this step, you create a Visual Studio App Center account and add a new app.
    ![image](https://user-images.githubusercontent.com/107197611/174593943-8def5530-a282-4884-be24-2f2ded349b1c.png)
 
 ## Step 6: Configure actions
-1. In the newly created fork from [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops/edit/main/README.md#step-4-github-configuration), go to the workflow file [..mobile-devops/.github/workflows/appcenter-cloud-device-test.yml](/.github/workflows/appcenter-cloud-device-test.yml)
+1. In the newly created fork from [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops#step-4-github-configuration), go to the workflow file [..mobile-devops/.github/workflows/appcenter-cloud-device-test.yml](/.github/workflows/appcenter-cloud-device-test.yml)
 2. Locate and update the following slugs
    - `appcenterAndroidAppSlug` [app-center-username]/[app-center-android-app-name]
    - `appcenterAndroidDeviceSetSlug` [app-center-username]/[app-center-android-device-set-name]
@@ -61,7 +61,7 @@ In this step, you create a Visual Studio App Center account and add a new app.
 
 
 ## Step 7: Run workflow
-1. In the newly created fork from [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops/edit/main/README.md#step-4-github-configuration), go to **Actions** and enable if prompted
+1. In the newly created fork from [Step 4: GitHub configuration](https://github.com/danelbernau/mobile-devops#step-4-github-configuration), go to **Actions** and enable if prompted
 2. Select the **Build & Test on AppCenter** workflow
 3. Click on the **Run workflow** button ![image](https://user-images.githubusercontent.com/107197611/174613185-d8fa6ed0-16e2-4bea-9476-fbea17ceb71e.png)
 4. You can check the progress of the workflow while it is running by selecting the active workflow. You can also select each specific job to check individual progress. ![image](https://user-images.githubusercontent.com/107197611/174613963-1d647619-82f5-4455-be68-5f967a69e356.png)
