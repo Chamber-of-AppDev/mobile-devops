@@ -45,10 +45,10 @@ In this step, you create a Visual Studio App Center account and add a new app.
 3. Make sure all the secrets are added 
    - `ANDROID_SIGNING_KEY_ALIAS` android_keystore
    - `ANDROID_SIGNING_KEY_BASE64` [Android signing key base64](/src/Xamarin.Demo/self-signed-certs/android-keystore.keystore.b64)
-   - `ANDROID_SIGNING_KEY_STORE_PASSWORD`
+   - `ANDROID_SIGNING_KEY_STORE_PASSWORD` 12341234
    - `APP_CENTER_API_TOKEN` token generated in [Step 3: Generate API token](https://github.com/danelbernau/mobile-devops#step-3-generate-api-token)
    - `UWP_CERTIFICATE_BASE64` [UWP certificate base64](/src/Xamarin.Demo/self-signed-certs/Xamarin.Demo.App.UWP_TemporaryKey.pfx.b64)
-   - `UWP_CERTIFICATE_PASSWORD`
+   - `UWP_CERTIFICATE_PASSWORD` 1234
    ![image](https://user-images.githubusercontent.com/107197611/174593943-8def5530-a282-4884-be24-2f2ded349b1c.png)
 
 ## Step 6: Configure actions
