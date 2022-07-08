@@ -18,9 +18,9 @@ env:
   
   testProjectPath: 'src\Xamarin.Demo\Xamarin.Demo.App.UITest\Xamarin.Demo.App.UITest.csproj'
     
-  appcenterAndroidAppSlug: danelbernau/mobile-dev-android
-  appcenterAndroidDeviceSetSlug: danelbernau/android-device-set
-  appcenterUwpAppSlug: danelbernau/mobile-dev-uwp
+  appcenterAndroidAppSlug: daronyondem-MS/xamarin-demo
+  appcenterAndroidDeviceSetSlug: daronyondem-MS/test-devices
+  appcenterUwpAppSlug: daronyondem-MS/uwp-demo/
 
 jobs:
   Build_Stage_Build_Android:
